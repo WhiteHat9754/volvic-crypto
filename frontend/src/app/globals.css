@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+/* Custom gradient borders */
+.border-gradient-to-r {
+  border-image: linear-gradient(to right, #3b82f6, #8b5cf6, #ec4899) 1;
+}
+
+/* Glassmorphism effect */
+.backdrop-blur-xl {
+  backdrop-filter: blur(20px);
+}
