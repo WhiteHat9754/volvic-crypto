@@ -1,0 +1,52 @@
+# =========================================
+# Global
+# =========================================
+node_modules/
+.env
+*.log
+.DS_Store
+*.pem
+
+# Ignore build outputs
+dist/
+build/
+.tmp/
+.cache/
+
+# Ignore IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# =========================================
+# Backend
+# =========================================
+backend/node_modules/
+backend/.env
+backend/dist/
+backend/build/
+backend/logs/
+backend/tmp/
+
+# Python (if backend has Python)
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/*.pyd
+backend/.python-version
+
+# =========================================
+# Frontend
+# =========================================
+frontend/node_modules/
+frontend/.env
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+
+# Ignore lock files (optional, keep if needed)
+ package-lock.json
+ yarn.lock
+ pnpm-lock.yaml
