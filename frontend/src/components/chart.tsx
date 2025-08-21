@@ -1,5 +1,9 @@
-import React from 'react';
-import Chart from 'react-apexcharts';
+'use client';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Chart component to avoid SSR issues
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface MarketDataPoint {
   time: string;
@@ -11,12 +15,27 @@ interface MarketOverviewChartProps {
 }
 
 const MarketOverviewChart: React.FC<MarketOverviewChartProps> = ({ marketData }) => {
-  // Dynamic tick calculation based on data length
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Show loading state during SSR and initial client load
+  if (!isClient) {
+    return (
+      <div className="h-[350px] bg-gray-100 rounded-lg animate-pulse flex items-center justify-center">
+        <div className="text-gray-500">Loading chart...</div>
+      </div>
+    );
+  }
+
+  // Your existing chart configuration (keep as is)
   const getOptimalTickAmount = (dataLength: number) => {
     if (dataLength <= 7) return dataLength;
     if (dataLength <= 30) return Math.ceil(dataLength / 4);
     if (dataLength <= 90) return Math.ceil(dataLength / 7);
-    return Math.ceil(dataLength / 14); // For larger datasets, show every ~14th point
+    return Math.ceil(dataLength / 14);
   };
 
   const options = {
@@ -45,7 +64,7 @@ const MarketOverviewChart: React.FC<MarketOverviewChartProps> = ({ marketData })
       title: { text: 'Trading Hours (EST)' },
       labels: {
         show: true,
-        rotate: marketData.length > 10 ? -45 : 0, // Auto-rotate if many labels
+        rotate: marketData.length > 10 ? -45 : 0,
         hideOverlappingLabels: true,
         showDuplicates: false,
         trim: false,
@@ -54,44 +73,39 @@ const MarketOverviewChart: React.FC<MarketOverviewChartProps> = ({ marketData })
         },
         formatter: function(value: string, timestamp?: number) {
           let date;
-          
           if (timestamp) {
             date = new Date(timestamp);
           } else {
             date = new Date(value);
           }
-          
+
           if (isNaN(date.getTime())) {
-            return value; // Return original if invalid date
+            return value;
           }
-          
-          // Dynamic formatting based on data span
+
           const firstDate = new Date(marketData[0]?.time);
           const lastDate = new Date(marketData[marketData.length - 1]?.time);
           const daysDiff = Math.abs(lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-          
+
           if (daysDiff < 1) {
-            // Same day data - show time format (HH:MM)
-            return date.toLocaleTimeString('en-US', { 
-              hour: '2-digit', 
+            return date.toLocaleTimeString('en-US', {
+              hour: '2-digit',
               minute: '2-digit',
-              hour12: false 
+              hour12: false
             });
           } else if (daysDiff <= 31) {
-            // Within a month - show DD-MMM format
             const day = date.getDate().toString().padStart(2, '0');
             const month = date.toLocaleDateString('en-US', { month: 'short' });
             return `${day}-${month}`;
           } else {
-            // Longer periods - show MMM-YY format
             const month = date.toLocaleDateString('en-US', { month: 'short' });
             const year = date.getFullYear().toString().slice(-2);
             return `${month}-${year}`;
           }
-        }
-      },
-      tickAmount: getOptimalTickAmount(marketData.length),
-      tickPlacement: 'between' as const
+        },
+        tickAmount: getOptimalTickAmount(marketData.length),
+        tickPlacement: 'between' as const
+      }
     },
     yaxis: {
       title: { text: 'Market Value ($)' },
@@ -112,12 +126,10 @@ const MarketOverviewChart: React.FC<MarketOverviewChartProps> = ({ marketData })
         formatter: function(value: any, { dataPointIndex }: any) {
           const originalTime = marketData[dataPointIndex]?.time;
           const date = new Date(originalTime);
-          
           if (isNaN(date.getTime())) {
             return `Time: ${originalTime} EST`;
           }
-          
-          // Show full datetime in tooltip
+
           return `Time: ${date.toLocaleString('en-US', {
             month: 'short',
             day: 'numeric',

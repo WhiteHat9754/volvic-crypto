@@ -34,13 +34,14 @@
     "react-dom": "19.1.1",
     "react-hot-toast": "^2.5.2",
     "react-toastify": "^11.0.5",
+    "socket": "^1.0.92",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "use-debounce": "^10.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.12",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24",
@@ -49,7 +50,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^4.1.12",
     "typescript": "^5"
   }
 }

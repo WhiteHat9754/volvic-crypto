@@ -58,7 +58,7 @@ const CandlestickChart: React.FC<CandlestickChartProps> = ({ symbol, stockAPI })
   useEffect(() => {
     setMounted(true);
   }, []);
-
+  
   const fetchData = useCallback(async (signal?: AbortSignal) => {
     if (!symbol) {
       setChartData([]);

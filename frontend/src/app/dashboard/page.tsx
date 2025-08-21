@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import MarketOverviewChart from '../../components/chart';
+import MarketOverviewChart from '@/components/chart';
 
 import {
   TrendingUp,
